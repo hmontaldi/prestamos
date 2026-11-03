@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Préstamo de computadoras · Esc. 4-257</title>
+<style>
+:root{--bg:#f5f6f8;--card:#fff;--tx:#1b1f24;--mu:#667085;--bd:#d0d5dd;--ac:#c2570a;--ok:#e8f3e1;--okb:#3f8f2a;--no:#fde6df;--nob:#d8431f;--sel:#2f7fc1}
+@media(prefers-color-scheme:dark){:root{--bg:#14171c;--card:#1d2127;--tx:#eceff3;--mu:#9aa4b2;--bd:#363c46;--ok:#1b2e14;--no:#3a1e16}}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,sans-serif;background:var(--bg);color:var(--tx);padding:12px;max-width:900px;margin-inline:auto}
+header{background:#111;color:#fff;border-radius:10px 10px 0 0;padding:10px 12px;display:flex;align-items:center;gap:12px}
+header img{width:56px;height:56px;border-radius:50%;background:#fff}
+header h1{font-size:1.15rem;margin:0}header small{color:#fcc419;font-size:.8rem;display:block}
+.franja{height:6px;border-radius:0 0 10px 10px;margin-bottom:12px;background:linear-gradient(90deg,#fcc419 0 25%,#f28c1c 25% 50%,#d8431f 50% 65%,#2f7fc1 65% 85%,#3f8f2a 85%)}
+h1{font-size:1.2rem;margin:0 0 4px}h2{font-size:1rem;margin:0 0 8px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:12px;margin-bottom:12px}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px}
+label{font-size:.8rem;color:var(--mu);display:block;margin-bottom:2px}
+input,select,button{width:100%;padding:9px;border:1px solid var(--bd);border-radius:8px;background:var(--card);color:var(--tx);font-size:1rem}
+button{background:var(--ac);color:#fff;border:0;font-weight:600;cursor:pointer}
+button.sec{background:transparent;color:var(--ac);border:1px solid var(--ac);padding:5px 10px;width:auto;font-size:.85rem}
+button:disabled{opacity:.5}
+#grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(54px,1fr));gap:6px}
+.pc{padding:10px 0;text-align:center;border-radius:8px;border:2px solid var(--okb);background:var(--ok);font-weight:700;cursor:pointer}
+.pc.rec{grid-column:span 2}
+.pc.busy{border-color:var(--nob);background:var(--no);cursor:not-allowed;opacity:.8}
+.pc.sel{background:var(--sel);border-color:var(--sel);color:#fff}
+.leg{font-size:.8rem;color:var(--mu);margin-top:6px}
+.loan{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 0;border-top:1px solid var(--bd);font-size:.9rem}
+.loan small{color:var(--mu);display:block}
+#msg{padding:8px;border-radius:8px;margin-bottom:12px;display:none;font-size:.9rem}
+#msg.ok{display:block;background:var(--ok)}#msg.err{display:block;background:var(--no)}
+.tag{font-size:.75rem;color:var(--mu)}
+.bar{display:flex;gap:8px;align-items:center;margin-bottom:10px}.bar button{width:auto;padding:7px 12px;font-size:.9rem}
+.tabs{display:flex;gap:6px;margin-bottom:12px}.tab{background:var(--card);color:var(--tx);border:1px solid var(--bd)}
+.tab.on{background:#111;color:#fff;border-color:#111}
+.cal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}.cal-head h2{margin:0;text-transform:capitalize}
+#cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
+.dh{font-size:.75rem;color:var(--mu)}
+.day{padding:9px 0;border-radius:8px;border:1px solid var(--bd);cursor:pointer;position:relative;font-size:.95rem}
+.day.vacio{border:0;cursor:default}.day.hoy{border-color:var(--ac);font-weight:700}
+.day.sel{background:var(--sel);border-color:var(--sel);color:#fff}
+.day.tiene::after{content:"";position:absolute;bottom:3px;left:50%;margin-left:-3px;width:6px;height:6px;border-radius:50%;background:#f28c1c}
+.cont{font-variant-numeric:tabular-nums;font-weight:700;font-size:1.1rem;color:var(--okb);margin-left:auto;text-align:right;white-space:nowrap}
+.cont.warn{color:#d97706}.cont.late{color:var(--nob)}
+@media print{.bar,.tabs{display:none}}
+@media print{button,#form{display:none}header{background:#fff;color:#000;border:1px solid #000}header small{color:#000}}
+</style>
+</head>
+<body>
+<header><img alt="Logo de la escuela" src="data:image/jpeg;base64,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"><div><h1>Préstamo de computadoras</h1><small>Esc. «Prof. Luis Rodríguez Nievas» 4-257 · Maipú, Mza.</small></div></header>
+<div class="franja"></div>
+<div class="tag" id="modo"></div>
+<div id="msg"></div>
+<div class="bar"><button id="btnAct">↻ Actualizar datos</button><span class="tag" id="actTxt"></span></div>
+<div class="tabs"><button class="tab on" data-t="prestamos">Préstamos</button><button class="tab" data-t="reservas">Reservas</button></div>
+<div id="tab-prestamos">
+
+<div class="card" id="form">
+  <h2>1. Datos de la clase</h2>
+  <div class="row">
+    <div><label>Docente</label><select id="docente"></select></div>
+    <div><label>Materia</label><select id="materia"></select></div>
+    <div><label>Tiempo de uso</label><select id="minutos"></select></div>
+  </div>
+  <h2 style="margin-top:12px" id="h2Alumno">2. Alumno</h2>
+  <div class="row">
+    <div><label>Curso</label><select id="curso"></select></div>
+    <div id="boxAlumno"><label>Alumno</label><select id="alumno"></select></div>
+  </div>
+  <h2 style="margin-top:12px">3. Computadora, TV o proyector <span class="tag" id="selTxt"></span></h2>
+  <div id="grid"></div>
+  <div class="leg">Verde: libre · Rojo: en uso · Azul: seleccionada</div>
+  <button id="btn" style="margin-top:12px">Registrar préstamo</button>
+</div>
+
+<div class="card">
+  <h2>Préstamos en uso (<span id="cnt">0</span>)</h2>
+  <div id="lista"></div>
+</div>
+
+</div>
+<div id="tab-reservas" hidden>
+  <div class="card">
+    <div class="cal-head"><button class="sec" id="mesAnt">‹</button><h2 id="mesTit"></h2><button class="sec" id="mesSig">›</button></div>
+    <div id="cal"></div>
+    <div class="leg">Punto naranja: día con reservas.</div>
+  </div>
+  <div class="card">
+    <h2>Reservar el <span id="diaTxt"></span></h2>
+    <div class="row">
+      <div><label>Docente</label><select id="rdocente"></select></div>
+      <div><label>Materia</label><select id="rmateria"></select></div>
+      <div><label>Curso</label><select id="rcurso"></select></div>
+      <div><label>Recurso</label><select id="rrecurso"></select></div>
+      <div><label>Hora de inicio</label><select id="rhora"></select></div>
+      <div><label>Tiempo de reserva</label><select id="rminutos"></select></div>
+    </div>
+    <button id="btnRes" style="margin-top:10px">Reservar</button>
+    <div id="listaRes" style="margin-top:8px"></div>
+  </div>
+</div>
+<script>
+// ===== CONFIGURACIÓN =====
+const SCRIPT_URL = "";   // Pegar acá la URL de la aplicación web de Apps Script (termina en /exec)
+const TOTAL_PC = 30;
+const EXTRAS = ["TV","Proyector"];   // recursos que se prestan además de las computadoras
+const RECURSOS_RES = ["Carrito de computadoras","TV","Proyector"];   // opciones de reserva
+// Cursos de 1ro 1ra a 5to 2da (dos divisiones por año)
+const CURSOS = ["1ro","2do","3ro","4to","5to"].flatMap(a=>["1ra","2da"].map(d=>a+" "+d));
+const claveCurso = c => String(c).replace(/\D/g,"");   // "1ro 1ra", "1° 1ª" y "1 1" se leen igual: 11
+const PASO_MIN = 5;          // los horarios de inicio de las reservas van de a 5 minutos
+const HORA_CATEDRA = 35;     // minutos de una hora cátedra en esta escuela
+const MAX_HORAS = 7;         // el tiempo de uso se elige hasta 7 horas cátedra (2 horas cátedra = 1 módulo)
+const HORA_INI = "08:30", HORA_FIN = "18:00";   // rango horario de las reservas (de a 5 minutos)
+// =========================
+
+const $ = id => document.getElementById(id);
+let alumnos = [], prestamos = [], reservas = [], pcSel = null;
+const DEMO = !SCRIPT_URL;
+
+function msg(t, tipo){ const m=$("msg"); m.textContent=t; m.className=tipo; if(tipo==="ok") setTimeout(()=>m.className="",4000); }
+
+async function api(action, data){
+  if(DEMO) return demo(action, data);
+  if(data){
+    const r = await fetch(SCRIPT_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action,...data})});
+    return r.json();
+  }
+  const r = await fetch(SCRIPT_URL+"?action="+action);
+  return r.json();
+}
+
+// Modo demostración (sin Google Sheet): datos de ejemplo y guardado local
+function demo(action, d){
+  const P = JSON.parse(localStorage.getItem("prestamosDemo")||"[]");
+  if(action==="alumnos") return [{curso:"1ro 1ra",nombre:"Alumno Ejemplo, Juan"},{curso:"3ro 1ra",nombre:"Pérez, Ana"},{curso:"3ro 1ra",nombre:"Gómez, Luis"},{curso:"4to 2da",nombre:"Díaz, Marta"}];
+  if(action==="profesores") return ["Profesor Ejemplo 1","Profesora Ejemplo 2"];
+  if(action==="materias") return ["Producción Multimedial","Funcionamiento de Sistemas Digitales"];
+  const R = JSON.parse(localStorage.getItem("reservasDemo")||"[]");
+  if(action==="reservas") return R;
+  if(action==="reservar"){ R.push({id:Date.now().toString(),...d}); localStorage.setItem("reservasDemo",JSON.stringify(R)); return {ok:true}; }
+  if(action==="cancelar_reserva"){ localStorage.setItem("reservasDemo",JSON.stringify(R.filter(r=>r.id!==d.id))); return {ok:true}; }
+  if(action==="prestamos") return P;
+  if(action==="registrar"){ if(P.some(p=>String(p.pc)===String(d.pc))) return {ok:false,error:"El recurso "+d.pc+" ya está en uso"};
+    P.push({id:Date.now().toString(),fecha:new Date().toISOString(),...d}); localStorage.setItem("prestamosDemo",JSON.stringify(P)); return {ok:true}; }
+  if(action==="devolver"){ localStorage.setItem("prestamosDemo",JSON.stringify(P.filter(p=>p.id!==d.id))); return {ok:true}; }
+}
+
+function cargarCursos(){
+  const prev=$("curso").value, prevR=$("rcurso").value;
+  const cursos=CURSOS;
+  const h=cursos.map(c=>`<option>${c}</option>`).join("");
+  $("curso").innerHTML=h; $("rcurso").innerHTML=h;
+  if(cursos.includes(prev)) $("curso").value=prev;
+  if(cursos.includes(prevR)) $("rcurso").value=prevR;
+  cargarAlumnos();
+}
+function cargarAlumnos(){
+  const prev=$("alumno").value, c=$("curso").value;
+  const noms=alumnos.filter(a=>claveCurso(a.curso)===claveCurso(c)).map(a=>a.nombre).sort((x,y)=>x.localeCompare(y,"es"));
+  $("alumno").innerHTML=noms.map(n=>`<option>${n}</option>`).join("");
+  if(noms.includes(prev)) $("alumno").value=prev;
+}
+const recTxt=r=>isNaN(r)?r:"PC "+r;
+const ordRec=r=>isNaN(r)?1000+EXTRAS.indexOf(r):+r;
+function dibujarGrid(){
+  const ocupadas=new Set(prestamos.map(p=>String(p.pc)));
+  if(pcSel!==null && ocupadas.has(String(pcSel))) pcSel=null;
+  let h="";
+  for(let i=1;i<=TOTAL_PC;i++){
+    const b=ocupadas.has(String(i));
+    h+=`<div class="pc ${b?"busy":""} ${pcSel===i?"sel":""}" data-n="${i}">${i}</div>`;
+  }
+  h+=EXTRAS.map(x=>`<div class="pc rec ${ocupadas.has(x)?"busy":""} ${pcSel===x?"sel":""}" data-n="${x}">${x}</div>`).join("");
+  $("grid").innerHTML=h;
+  $("selTxt").textContent=pcSel!==null?`— ${recTxt(pcSel)}`:"";
+  const extra=pcSel!==null&&isNaN(pcSel);   // TV o proyector: lo pide el docente, sin alumno
+  $("boxAlumno").hidden=extra;
+  $("h2Alumno").textContent=extra?"2. Curso (lo retira el docente)":"2. Alumno";
+}
+function finDe(p){ const t=new Date(p.fecha).getTime()+(+p.minutos)*60000; return isNaN(t)?null:new Date(t); }
+function etqMin(m){
+  const h=Math.round(m/HORA_CATEDRA); if(h*HORA_CATEDRA!==+m) return m+" min";
+  const mod=h%2===0?` · ${h/2} ${h/2===1?"módulo":"módulos"}`:"";
+  return `${h} ${h===1?"hora cátedra":"horas cátedra"}${mod} (${m} min)`;
+}
+function finTxt(p){ const f=finDe(p); return f?`${etqMin(p.minutos)} · hasta ${f.toLocaleTimeString("es-AR",{hour:"2-digit",minute:"2-digit"})}`:"sin tiempo"; }
+function vencido(p){ const f=finDe(p); return f&&f<new Date(); }
+function llenar(id,arr,guardado){ const act=$(id).value; $(id).innerHTML=arr.map(x=>`<option>${x}</option>`).join(""); const g=localStorage.getItem(guardado); if(arr.includes(act)) $(id).value=act; else if(g&&arr.includes(g)) $(id).value=g; }
+function dibujarLista(){
+  $("cnt").textContent=prestamos.length;
+  $("lista").innerHTML=prestamos.length?prestamos.slice().sort((a,b)=>ordRec(a.pc)-ordRec(b.pc)).map(p=>
+    `<div class="loan"><div><b>${recTxt(p.pc)}</b>${p.alumno&&p.alumno!=="—"?" · "+p.alumno+" ("+p.curso+")":" · "+p.curso}<small>${p.docente} · ${p.materia} · <span style="${vencido(p)?'color:var(--nob);font-weight:700':''}">${finTxt(p)}</span></small></div>
+     <div class="cont" data-fin="${finDe(p)?finDe(p).getTime():""}"></div><button class="sec" data-id="${p.id}">Devolver</button></div>`).join("")
+    :`<div class="tag">No hay computadoras prestadas.</div>`;
+}
+async function refrescar(){
+  try{ const p=await api("prestamos"), r=await api("reservas"); prestamos=Array.isArray(p)?p:[]; reservas=Array.isArray(r)?r:[]; }
+  catch(e){ msg("No se pudo actualizar desde el Sheet.","err"); }
+  dibujarGrid(); dibujarLista(); dibujarCal(); dibujarReservas(); tick();
+}
+
+$("grid").addEventListener("click",e=>{
+  const v=e.target.dataset.n; if(!v||e.target.classList.contains("busy")) return;
+  pcSel=isNaN(v)?v:+v; dibujarGrid();
+});
+$("curso").addEventListener("change",cargarAlumnos);
+$("lista").addEventListener("click",async e=>{
+  const id=e.target.dataset.id; if(!id) return;
+  e.target.disabled=true;
+  try{ const r=await api("devolver",{id}); r.ok?msg("Computadora devuelta.","ok"):msg(r.error,"err"); }
+  catch(err){ msg("Error de conexión.","err"); }
+  refrescar();
+});
+$("btn").addEventListener("click",async()=>{
+  const d={docente:$("docente").value,materia:$("materia").value,minutos:+$("minutos").value,curso:$("curso").value,alumno:$("alumno").value,pc:pcSel};
+  if(!d.docente||!d.materia) return msg("Seleccioná docente y materia.","err");
+  const esPC=!isNaN(d.pc);
+  if(esPC&&!d.alumno) return msg("Seleccioná un alumno.","err");
+  if(d.pc===null) return msg("Seleccioná una computadora, TV o proyector.","err");
+  if(!esPC) d.alumno="—";
+  if(d.alumno!=="—"&&prestamos.some(p=>p.alumno===d.alumno&&p.curso===d.curso)) return msg(d.alumno+" ya tiene una computadora en uso.","err");
+  $("btn").disabled=true;
+  try{
+    const r=await api("registrar",d);
+    if(r.ok){ msg(`Préstamo registrado: ${recTxt(d.pc)}${d.alumno==="—"?"":" → "+d.alumno}.`,"ok"); localStorage.setItem("docente",d.docente); localStorage.setItem("materia",d.materia); pcSel=null; }
+    else msg(r.error||"No se pudo registrar.","err");
+  }catch(e){ msg("Error de conexión. Reintentá.","err"); }
+  $("btn").disabled=false; refrescar();
+});
+
+// Contador de tiempo de cada préstamo (se actualiza cada segundo, sin volver a dibujar la lista)
+function tick(){
+  const ahora=Date.now();
+  document.querySelectorAll(".cont").forEach(el=>{
+    const f=+el.dataset.fin; if(!f){ el.textContent=""; return; }
+    const seg=Math.round((f-ahora)/1000), tarde=seg<0, d=Math.abs(seg);
+    const t=String(Math.floor(d/60)).padStart(2,"0")+":"+String(d%60).padStart(2,"0");
+    el.textContent=tarde?"+"+t+" excedido":t;
+    el.className="cont "+(tarde?"late":d<=300?"warn":"");
+    el.title=tarde?"Tiempo excedido":"Tiempo restante";
+  });
+}
+// ===== Reservas =====
+const iso=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+let diaSel=iso(new Date()), mesVer=new Date(new Date().getFullYear(),new Date().getMonth(),1);
+function fechaLarga(f){ const [y,m,d]=f.split("-"); return new Date(y,m-1,d).toLocaleDateString("es-AR",{weekday:"long",day:"numeric",month:"long"}); }
+function dibujarCal(){
+  $("mesTit").textContent=mesVer.toLocaleDateString("es-AR",{month:"long",year:"numeric"});
+  const y=mesVer.getFullYear(), m=mesVer.getMonth(), off=(mesVer.getDay()+6)%7, n=new Date(y,m+1,0).getDate(), hoy=iso(new Date());
+  const con=new Set(reservas.map(r=>r.fecha));
+  let h=["L","M","X","J","V","S","D"].map(x=>`<div class="dh">${x}</div>`).join("")+`<div class="day vacio"></div>`.repeat(off);
+  for(let d=1;d<=n;d++){ const f=iso(new Date(y,m,d));
+    h+=`<div class="day ${f===hoy?"hoy":""} ${f===diaSel?"sel":""} ${con.has(f)?"tiene":""}" data-f="${f}">${d}</div>`; }
+  $("cal").innerHTML=h;
+}
+const aMin=h=>{const [x,y]=h.split(":");return +x*60+ +y;};
+const aHora=m=>String(Math.floor(m/60)).padStart(2,"0")+":"+String(m%60).padStart(2,"0");
+function dibujarReservas(){
+  $("diaTxt").textContent=fechaLarga(diaSel);
+  const L=reservas.filter(r=>r.fecha===diaSel).sort((x,y)=>(x.hora||"99").localeCompare(y.hora||"99"));
+  $("listaRes").innerHTML=L.length?L.map(r=>{
+    const hr=r.hora?`${r.hora}–${aHora(aMin(r.hora)+(+r.minutos||0))} (${etqMin(r.minutos)})`:"sin horario";
+    return `<div class="loan"><div><b>${hr}</b> · ${r.recurso||RECURSOS_RES[0]}<small>${r.docente} · ${r.curso} · ${r.materia}</small></div><button class="sec" data-rid="${r.id}">Cancelar</button></div>`;
+  }).join(""):`<div class="tag">Sin reservas para este día.</div>`;
+}
+$("cal").addEventListener("click",e=>{ const f=e.target.dataset.f; if(!f) return; diaSel=f; dibujarCal(); dibujarReservas(); });
+$("mesAnt").addEventListener("click",()=>{ mesVer=new Date(mesVer.getFullYear(),mesVer.getMonth()-1,1); dibujarCal(); });
+$("mesSig").addEventListener("click",()=>{ mesVer=new Date(mesVer.getFullYear(),mesVer.getMonth()+1,1); dibujarCal(); });
+$("btnRes").addEventListener("click",async()=>{
+  const d={fecha:diaSel,docente:$("rdocente").value,materia:$("rmateria").value,curso:$("rcurso").value,recurso:$("rrecurso").value,hora:$("rhora").value,minutos:+$("rminutos").value};
+  if(!d.docente||!d.materia||!d.curso) return msg("Seleccioná docente, materia y curso.","err");
+  if(d.fecha<iso(new Date())) return msg("No se puede reservar en una fecha pasada.","err");
+  if(aMin(d.hora)+d.minutos>aMin(HORA_FIN)) return msg(`La reserva termina después de las ${HORA_FIN}. Reducí el tiempo o adelantá el inicio.`,"err");
+  if(reservas.some(r=>r.fecha===d.fecha&&r.hora===d.hora&&(r.recurso||RECURSOS_RES[0])===d.recurso&&r.docente===d.docente&&r.curso===d.curso)) return msg("Esa reserva ya existe.","err");
+  $("btnRes").disabled=true;
+  try{ const r=await api("reservar",d); if(r.ok){ msg("Reserva registrada.","ok"); localStorage.setItem("docente",d.docente); localStorage.setItem("materia",d.materia); } else msg(r.error||"No se pudo reservar.","err"); }
+  catch(e){ msg("Error de conexión. Reintentá.","err"); }
+  $("btnRes").disabled=false; refrescar();
+});
+$("listaRes").addEventListener("click",async e=>{
+  const id=e.target.dataset.rid; if(!id) return; e.target.disabled=true;
+  try{ const r=await api("cancelar_reserva",{id}); r.ok?msg("Reserva cancelada.","ok"):msg(r.error,"err"); }catch(err){ msg("Error de conexión.","err"); }
+  refrescar();
+});
+document.querySelector(".tabs").addEventListener("click",e=>{
+  const t=e.target.dataset.t; if(!t) return;
+  document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("on",b.dataset.t===t));
+  $("tab-prestamos").hidden=t!=="prestamos"; $("tab-reservas").hidden=t!=="reservas";
+});
+
+// Actualiza la conexión con el Sheet sin recargar la página (conserva lo que está elegido)
+async function actualizarTodo(manual){
+  const b=$("btnAct"); b.disabled=true; b.textContent="Actualizando…";
+  try{
+    alumnos=await api("alumnos");
+    const prof=await api("profesores"), mat=await api("materias");
+    ["docente","rdocente"].forEach(i=>llenar(i,prof,"docente"));
+    ["materia","rmateria"].forEach(i=>llenar(i,mat,"materia"));
+    cargarCursos(); await refrescar();
+    $("actTxt").textContent="Actualizado "+new Date().toLocaleTimeString("es-AR",{hour:"2-digit",minute:"2-digit"});
+    if(manual) msg("Datos actualizados desde el Sheet.","ok");
+  }catch(e){ msg("No se pudo conectar con el Sheet.","err"); }
+  b.disabled=false; b.textContent="↻ Actualizar datos";
+}
+
+(async function init(){
+  $("modo").textContent=DEMO?"Modo demostración: configurá SCRIPT_URL para conectar con Google Sheets.":"Conectado a Google Sheets";
+  let mins=[]; for(let h=1;h<=MAX_HORAS;h++) mins.push(h*HORA_CATEDRA);
+  $("minutos").innerHTML=mins.map(m=>`<option value="${m}">${etqMin(m)}</option>`).join("");
+  $("minutos").value=2*HORA_CATEDRA;
+  let hs=[]; for(let m=aMin(HORA_INI);m<=aMin(HORA_FIN)-PASO_MIN;m+=PASO_MIN) hs.push(aHora(m));
+  $("rrecurso").innerHTML=RECURSOS_RES.map(x=>`<option>${x}</option>`).join("");
+  $("rhora").innerHTML=hs.map(h=>`<option>${h}</option>`).join("");
+  $("rminutos").innerHTML=mins.map(m=>`<option value="${m}">${etqMin(m)}</option>`).join("");
+  $("rminutos").value=2*HORA_CATEDRA;
+  $("btnAct").addEventListener("click",()=>actualizarTodo(true));
+  await actualizarTodo(false);
+  setInterval(refrescar,30000);
+  setInterval(tick,1000);
+})();
+</script>
+</body>
+</html>

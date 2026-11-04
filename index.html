@@ -128,7 +128,7 @@ async function api(action, data){
     const r = await fetch(SCRIPT_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action,...data})});
     return r.json();
   }
-  const r = await fetch(SCRIPT_URL"https://script.google.com/macros/s/AKfycbyBkzaIIpPXBXi0PJdhMbjfNTZuSryDInMqaTp5KoD2sugShkmoS8rkDP-6Yr_Py4zh8Q/exec"+"?action="+action);
+  const r = await fetch(SCRIPT_URL+"?action="+action);
   return r.json();
 }
 

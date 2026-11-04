@@ -49,7 +49,7 @@ button:disabled{opacity:.5}
 #splash img{width:min(55vw,240px);height:auto;border-radius:50%;background:#fff}
 #splash h1{font-size:1.15rem;margin:0}#splash .sub{color:var(--mu);font-size:.85rem;margin-top:-8px}
 .pbar{width:min(80vw,360px);height:10px;border-radius:6px;background:var(--bd);overflow:hidden}
-.pbar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,#fcc419,#f28c1c,#d8431f,#2f7fc1,#3f8f2a);transition:width 4s linear}
+.pbar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,#fcc419,#f28c1c,#d8431f,#2f7fc1,#3f8f2a);transition:width 6s linear}
 #splash.go .pbar>i{width:100%}
 .aviso{max-width:440px;border-left:4px solid var(--ac);background:var(--bg);padding:10px 12px;border-radius:8px;font-size:.9rem;text-align:left;line-height:1.35}
 @media print{#splash{display:none}}
@@ -348,7 +348,7 @@ async function actualizarTodo(manual){
   $("rminutos").value=2*HORA_CATEDRA;
   $("btnAct").addEventListener("click",()=>actualizarTodo(true));
   requestAnimationFrame(()=>requestAnimationFrame(()=>$("splash").classList.add("go")));
-  const minimo=new Promise(r=>setTimeout(r,4000));                  // la barra dura unos 4 segundos
+  const minimo=new Promise(r=>setTimeout(r,6000));                  // la barra dura unos 4 segundos
   const datos=actualizarTodo(false);
   const tope=new Promise(r=>setTimeout(r,15000));                   // si el Sheet tarda mucho, no se queda trabada
   await Promise.all([minimo, Promise.race([datos,tope])]);
